@@ -31,6 +31,10 @@ class Board
       return @grid[2]
     end
     
+    if not @grid.include?(-1)
+      return -1
+    end
+    
     false
   end
 

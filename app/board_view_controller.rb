@@ -18,6 +18,7 @@ class BoardViewController < UIViewController
     for i in 0..2
       for j in 0..2
         squareView = UIView.alloc.initWithFrame([[j * (SQUARE_SIZE + 2), i * (SQUARE_SIZE + 2)], [SQUARE_SIZE - 4, SQUARE_SIZE - 4]])
+        squareView.layer.cornerRadius = 5.0
         @squareViews[3*i + j] = squareView
         @boardView.addSubview(squareView)
       end
@@ -59,7 +60,11 @@ class BoardViewController < UIViewController
     
     if winner = @board.game_over?
       @board.reset
-      show_info("Player #{winner} wins!")
+      if winner == -1
+        show_info("No one wins!")
+      else
+        show_info("Player #{winner} wins!")
+      end
     end
     
     self.boardChanged
