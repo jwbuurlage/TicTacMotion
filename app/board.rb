@@ -1,21 +1,39 @@
 class Board
+  
+  # @grid:
+  # +---+---+---+
+  # | 0 | 1 | 2 |
+  # +---+---+---+
+  # | 3 | 4 | 5 |
+  # +---+---+---+
+  # | 6 | 7 | 8 |
+  # +---+---+---+
+  
   attr_reader :grid
   
   def initialize
+    # -1 for unset squares
     @grid = Array.new(9, -1)
   end
   
+  # returns false if illegal move
+  # and player id if it is legal
   def move(square, player)
+    # check if square is taken
     if not @grid[square] == -1 
       return false      
     end
     @grid[square] = player
   end
   
+  # resets the grid
   def reset 
     @grid.replace(Array.new(9, -1))
   end
   
+  # returns the id of the winner
+  # -1 for stalemate or false if
+  # game is not over
   def game_over?
     for i in 0..2
       if @grid[3*i] != -1 && @grid[3*i] == @grid[3*i + 1] && @grid[3*i + 1] == @grid[3*i + 2]

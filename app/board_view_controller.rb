@@ -5,32 +5,35 @@ class BoardViewController < UIViewController
   def viewDidLoad   
     self.init_views
     self.new_game 
-    self.boardChanged
+    self.board_changed
   end
   
   def init_views
     view.backgroundColor = UIColor.blackColor
     
-    @boardView = UIView.alloc.initWithFrame([[0, 0], [SQUARE_SIZE * 3, SQUARE_SIZE * 3]])
-    @boardView.center = view.center
+    # view for the board
+    @board_view = UIView.alloc.initWithFrame([[0, 0], [SQUARE_SIZE * 3, SQUARE_SIZE * 3]])
+    @board_view.center = view.center
     
-    @squareViews = []
+    # views for the square
+    @square_views = []
     for i in 0..2
       for j in 0..2
-        squareView = UIView.alloc.initWithFrame([[j * (SQUARE_SIZE + 2), i * (SQUARE_SIZE + 2)], [SQUARE_SIZE - 4, SQUARE_SIZE - 4]])
-        squareView.layer.cornerRadius = 5.0
-        @squareViews[3*i + j] = squareView
-        @boardView.addSubview(squareView)
+        square_view = UIView.alloc.initWithFrame([[j * (SQUARE_SIZE + 2), i * (SQUARE_SIZE + 2)], [SQUARE_SIZE - 4, SQUARE_SIZE - 4]])
+        square_view.layer.cornerRadius = 5.0
+        @square_views[3*i + j] = square_view
+        @board_view.addSubview(square_view)
       end
     end
     
+    # label for game information
     @label = UILabel.alloc.initWithFrame([[0, 0], [0, 0]])
     @label.textColor = UIColor.whiteColor
     @label.font = UIFont.systemFontOfSize(30)
     @label.backgroundColor = nil
     
     view.addSubview(@label)
-    view.addSubview(@boardView)
+    view.addSubview(@board_view)
   end
   
   def show_info(text)
@@ -40,13 +43,15 @@ class BoardViewController < UIViewController
   end
   
   def new_game
+    # initalize the game
     @board = Board.new
-    @current_player = 1
+    @current_player = 0
   end  
   
   def touchesEnded(touches, withEvent:event)
+    # check if we're touching a square
     for i in 0..8
-      if event.touchesForView(@squareViews[i])
+      if event.touchesForView(@square_views[i])
         if not @board.move(i, @current_player) then 
           show_info("Illegal move!")
           break
@@ -58,21 +63,23 @@ class BoardViewController < UIViewController
       end
     end
     
+    # check if the game is over
     if winner = @board.game_over?
       @board.reset
       if winner == -1
         show_info("No one wins!")
-      else
-        show_info("Player #{winner} wins!")
+      elsif winner
+        show_info("Player #{winner + 1} wins!")
       end
     end
     
-    self.boardChanged
+    self.board_changed
   end
   
-  def boardChanged
+  # update the square views
+  def board_changed
     for i in 0..8
-      @squareViews[i].backgroundColor = COLORS[@board.grid[i]]
+      @square_views[i].backgroundColor = COLORS[@board.grid[i]]
     end
   end
   
