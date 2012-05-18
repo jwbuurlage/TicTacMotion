@@ -20,8 +20,8 @@ class Board
     for i in 0..2
       if @grid[3*i] != -1 && @grid[3*i] == @grid[3*i + 1] && @grid[3*i + 1] == @grid[3*i + 2]
         return @grid[3*i]
-      elsif @grid[3*i] != -1 && @grid[3*i] == @grid[3*i + 3] && @grid[3*i + 3] == @grid[3*i + 6]
-        return @grid[3*i]
+      elsif @grid[i] != -1 && @grid[i] == @grid[i + 3] && @grid[i + 3] == @grid[i + 6]
+        return @grid[i]
       end
     end
     
